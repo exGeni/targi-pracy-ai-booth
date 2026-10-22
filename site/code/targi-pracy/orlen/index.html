@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Fotobudka · ExGenius × Targi Pracy IT PW</title>
+<meta name="description" content="Zrób zdjęcie, wybierz styl — AI przerysuje Cię w minutę. Demo ExGenius na Targach Pracy IT Politechniki Warszawskiej.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#07070a">
+<meta property="og:title" content="AI Fotobudka · ExGenius">
+<meta property="og:description" content="Zrób zdjęcie, wybierz styl — AI przerysuje Cię w minutę.">
+<meta property="og:url" content="https://exgenius.pro/targi-pracy/orlen/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307070a'/%3E%3Cpath d='M18 18h22v6H25v5h13v6H25v5h15v6H18z' fill='%23c6ff3d'/%3E%3Ccircle cx='47' cy='43' r='3.5' fill='%23ff5ba7'/%3E%3C/svg%3E">
+<style>
+  :root { color-scheme:dark; --bg:#07070a; --fg:#f2f1ec; --muted:#8d8b85; --line:rgba(242,241,236,.12); --acid:#c6ff3d; --pink:#ff5ba7; --violet:#7b5cff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--fg); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; min-height:100vh;
+    background-image:radial-gradient(60rem 40rem at 85% -10%, rgba(123,92,255,.22), transparent 60%), radial-gradient(40rem 30rem at -10% 110%, rgba(255,91,167,.16), transparent 60%); }
+  main { max-width:34rem; margin:0 auto; padding:max(1.25rem, env(safe-area-inset-top)) 1.25rem 3rem; }
+  header { display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:var(--muted); letter-spacing:.04em; }
+  header a { color:var(--fg); text-decoration:none; font-weight:700; letter-spacing:.02em; }
+  header a b { color:var(--acid); }
+  h1 { font-size:clamp(2.1rem, 9vw, 3.1rem); line-height:1; letter-spacing:-.03em; margin:2rem 0 .75rem; }
+  h1 em { font-style:normal; color:var(--acid); }
+  .lead { color:var(--muted); line-height:1.5; }
+  .step { margin-top:1.75rem; }
+  .step h2 { font-size:.75rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:.75rem; }
+  .row { display:flex; gap:.6rem; }
+  .btn { flex:1; display:inline-flex; justify-content:center; align-items:center; gap:.5rem; padding:.95rem 1rem; border-radius:.9rem; border:1px solid var(--line);
+    background:rgba(242,241,236,.04); color:var(--fg); font:inherit; font-weight:600; cursor:pointer; text-decoration:none; }
+  .btn.primary { background:var(--acid); color:#0b0b0d; border-color:var(--acid); }
+  .btn:disabled { cursor:not-allowed; }
+  .btn.primary:disabled { background:rgba(242,241,236,.08); color:var(--muted); border-color:var(--line); }
+  .btn:active { transform:scale(.98); }
+  .btn:focus-visible, .style:focus-visible, label.btn:focus-within { outline:2px solid var(--acid); outline-offset:2px; }
+  /* Visually hidden but focusable, so the photo pickers work from a keyboard. */
+  input[type=file] { position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; }
+  #preview { display:none; max-width:100%; max-height:42vh; margin-inline:auto; object-fit:contain; border-radius:1rem; border:1px solid var(--line); margin-top:.75rem; }
+  .styles { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; }
+  .style { padding:.85rem .4rem; border-radius:.9rem; border:1px solid var(--line); background:rgba(242,241,236,.03); color:var(--fg); font:inherit; font-size:.88rem; cursor:pointer; text-align:center; line-height:1.25; }
+  .style span { display:block; font-size:1.6rem; margin-bottom:.3rem; }
+  .style[aria-pressed=true] { border-color:var(--acid); background:rgba(198,255,61,.08); box-shadow:0 0 0 1px var(--acid) inset; }
+  #wait, #result, #error { display:none; }
+  .bar { height:.4rem; border-radius:1rem; background:var(--line); overflow:hidden; margin:1rem 0 .6rem; }
+  .bar i { display:block; height:100%; transform:scaleX(0); transform-origin:left; background:linear-gradient(90deg,var(--acid),var(--pink)); transition:transform 1s linear; }
+  .muted { color:var(--muted); font-size:1rem; line-height:1.5; }
+  #errmsg, .inline-err { color:var(--fg); font-size:1.05rem; border:1px solid var(--pink); background:rgba(255,91,167,.08); border-radius:.9rem; padding:.85rem 1rem; }
+  .inline-err { display:none; margin-top:.75rem; }
+  #out { width:100%; border-radius:1rem; border:1px solid var(--line); display:block; margin-bottom:.75rem; }
+  .pulse { width:100%; aspect-ratio:3/4; border-radius:1rem; border:1px solid var(--line); background:linear-gradient(110deg, rgba(242,241,236,.03) 30%, rgba(198,255,61,.10) 50%, rgba(242,241,236,.03) 70%) 0 0/300% 100%; animation:sh 1.6s linear infinite; }
+  @keyframes sh { to { background-position:-300% 0; } }
+  @media (prefers-reduced-motion: reduce) { .pulse { animation:none; } .bar i { transition:none; } }
+  footer { margin-top:2.5rem; padding-top:1.25rem; border-top:1px solid var(--line); color:var(--muted); font-size:.88rem; line-height:1.6; }
+  footer a { color:var(--fg); }
+</style>
+</head>
+<body>
+<main>
+  <header><a href="/">Ex<b>Genius</b></a><span>Targi Pracy IT · PW · 2026</span></header>
+
+  <div id="intro">
+  <h1>AI fotobudka, <em>skopiowana w&nbsp;przerwie na kawę.</em></h1>
+  <p class="lead">Podpatrzyliśmy pomysł na stoisku ORLEN i zbudowaliśmy własną wersję w trakcie targów. Zrób zdjęcie, wybierz styl — AI przerysuje Cię w około minutę.</p>
+  </div>
+
+  <section id="form">
+    <div class="step">
+      <h2>1 · Zdjęcie</h2>
+      <div class="row">
+        <label class="btn primary" for="cam">📸 Zrób selfie</label>
+        <label class="btn" for="gal">🖼️ Z galerii</label>
+      </div>
+      <input id="cam" type="file" accept="image/*" capture="user">
+      <input id="gal" type="file" accept="image/*">
+      <img id="preview" alt="Twoje zdjęcie">
+      <p class="inline-err" id="photoerr" role="alert">Nie udało się odczytać zdjęcia. Spróbuj innego (JPG lub PNG).</p>
+    </div>
+    <div class="step">
+      <h2>2 · Styl</h2>
+      <div class="styles" id="styles"></div>
+      <p class="inline-err" id="styleserr" role="alert">Nie udało się wczytać stylów. Odśwież stronę.</p>
+    </div>
+    <div class="step">
+      <button class="btn primary" id="go" disabled style="width:100%">Wybierz zdjęcie i styl</button>
+      <p class="muted" style="margin-top:.75rem">Zdjęcie trafia do modelu AI wyłącznie po to, by stworzyć portret, i jest usuwane zaraz po przetworzeniu. Gotowy portret znika z serwera po 24 h. <a href="/privacy/" style="color:inherit">Prywatność</a></p>
+    </div>
+  </section>
+
+  <section id="wait" class="step">
+    <div class="pulse"></div>
+    <div class="bar" role="progressbar" aria-label="Postęp"><i id="bari"></i></div>
+    <p class="muted" id="waitmsg" aria-live="polite">Wysyłam zdjęcie…</p>
+  </section>
+
+  <section id="result" class="step">
+    <img id="out" alt="Twój portret AI">
+    <div class="row">
+      <a class="btn primary" id="dl" download>⬇️ Pobierz</a>
+      <button class="btn" id="share">↗️ Udostępnij</button>
+    </div>
+    <button class="btn" id="again" style="width:100%; margin-top:.6rem">Jeszcze raz</button>
+    <p class="muted" style="margin-top:.75rem">Portret zniknie z serwera po 24 h — pobierz go teraz.</p>
+  </section>
+
+  <section id="error" class="step">
+    <p id="errmsg" role="alert"></p>
+    <button class="btn primary" id="retry" style="width:100%; margin-top:.75rem">Spróbuj ponownie</button>
+  </section>
+
+  <footer>
+    <strong>ExGenius</strong> — strony, boty, automatyzacje i agenci AI dla ludzi z pomysłem.<br>
+    Zbudowane na żywo podczas Targów Pracy IT Politechniki Warszawskiej. <a href="/">exgenius.pro</a><br>
+    Jak to zrobiliśmy: <a href="https://github.com/exGeni/targi-pracy-ai-booth">kod na GitHubie</a>
+  </footer>
+</main>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const show = (id) => {
+    ["form", "wait", "result", "error"].forEach((s) => ($(s).style.display = s === id ? "block" : "none"));
+    $("intro").style.display = id === "form" ? "block" : "none";
+    scrollTo(0, 0);
+  };
+  const ERR = {
+    busy: "Kolejka jest pełna — spróbuj za minutę.",
+    ip_cap: "Limit portretów na godzinę wyczerpany. Wróć za chwilę!",
+    day_cap: "Dzienny limit fotobudki wyczerpany. Dzięki za zainteresowanie!",
+    bad_photo: "Nie udało się odczytać zdjęcia. Spróbuj innego.",
+    error: "AI nie dało rady tym razem. Spróbuj ponownie lub wybierz inny styl.",
+    gone: "Ten portret już wygasł.",
+    offline: "Fotobudka jest chwilowo wyłączona. Wróć za kilka minut.",
+    storage: "Serwer nie mógł zapisać zdjęcia. Spróbuj ponownie za chwilę.",
+    timeout: "To trwa dłużej niż zwykle. Spróbuj ponownie za chwilę.",
+  };
+  let photo = null, style = null, timer = null, picking = 0;
+  // AbortSignal.timeout is missing on older Safari; a controller works everywhere.
+  const within = (ms) => { const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; };
+
+  fetch("styles.json").then((r) => r.json()).catch(() => { $("styleserr").style.display = "block"; return {}; }).then((styles) => {
+    for (const [key, s] of Object.entries(styles)) {
+      const b = document.createElement("button");
+      b.className = "style"; b.type = "button"; b.setAttribute("aria-pressed", "false");
+      b.innerHTML = `<span>${s.emoji}</span>${s.label}`;
+      b.onclick = () => {
+        document.querySelectorAll(".style").forEach((x) => x.setAttribute("aria-pressed", "false"));
+        b.setAttribute("aria-pressed", "true"); style = key; ready();
+      };
+      $("styles").append(b);
+    }
+  });
+
+  const ready = () => {
+    $("go").disabled = !(photo && style) || picking > 0;
+    $("go").textContent = photo && style ? "Przerysuj mnie ✨" : photo ? "Wybierz styl" : "Wybierz zdjęcie i styl";
+  };
+  const bar = (f) => ($("bari").style.transform = `scaleX(${f})`);
+
+  // Downscale in the browser: honours EXIF rotation and keeps the upload small on fair Wi-Fi.
+  let generation = 0;
+  async function pick(file) {
+    if (!file) return;
+    const mine = ++generation;   // a later pick wins, whatever order the decodes finish in
+    picking++; ready();
+    try { await load(file, mine); } finally { picking--; ready(); }
+  }
+  async function load(file, mine) {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    $("photoerr").style.display = "none";
+    try { await img.decode(); } catch {
+      photo = null; $("preview").style.display = "none"; ready();
+      $("photoerr").style.display = "block";
+      return;
+    } finally { setTimeout(() => URL.revokeObjectURL(img.src), 0); }
+    const k = Math.min(1, 1024 / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement("canvas");
+    c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    const blob = c.width && c.height ? await new Promise((res) => c.toBlob(res, "image/jpeg", 0.88)) : null;
+    if (mine !== generation) return;
+    if (!blob) { photo = null; $("preview").style.display = "none"; $("photoerr").style.display = "block"; return; }
+    photo = blob;
+    if ($("preview").src) URL.revokeObjectURL($("preview").src);
+    $("preview").src = URL.createObjectURL(photo);
+    $("preview").style.display = "block";
+    ready();
+  }
+  $("cam").onchange = (e) => pick(e.target.files[0]);
+  $("gal").onchange = (e) => pick(e.target.files[0]);
+
+  function fail(code) { clearTimeout(timer); $("errmsg").textContent = ERR[code] || ERR.error; show("error"); }
+
+  function done(src, id) {
+    clearTimeout(timer);
+    $("out").src = src; $("dl").href = src + "&dl=1";
+    history.replaceState(null, "", "?id=" + id);
+    show("result");
+  }
+
+  // One status request in flight at a time, each with its own timeout (fair Wi-Fi is slow).
+  function poll(id) {
+    const t0 = Date.now();
+    show("wait");
+    $("waitmsg").textContent = "Zdjęcie w kolejce…";
+    let errors = 0;
+    const tick = async () => {
+      const sec = (Date.now() - t0) / 1000;
+      if (sec > 900) return fail("timeout");
+      bar(Math.min(0.95, sec / 70));
+      let s = null;
+      try { s = await (await fetch("api.php?a=status&id=" + id, { cache: "no-store", signal: within(8000) })).json(); } catch {}
+      if (s?.state === "done") return done(s.img, id);
+      if (s?.state === "error" || s?.state === "gone") return fail(s.state);
+      if (s?.state === "queued") $("waitmsg").textContent = s.ahead ? `W kolejce: ${s.ahead} przed Tobą…` : "Zaraz zaczynamy…";
+      else if (s) $("waitmsg").textContent = sec < 30 ? "AI szkicuje Twój portret…" : "Ostatnie pociągnięcia pędzla…";
+      // Back off on errors and while far from done; jitter keeps phones from polling in step.
+      errors = s ? 0 : errors + 1;
+      const base = !s ? Math.min(15000, 2500 * 2 ** errors) : s.state === "queued" && s.ahead > 1 ? 6000 : 4000;
+      timer = setTimeout(tick, base + Math.random() * 1000);
+    };
+    timer = setTimeout(tick, 1500);
+  }
+
+  $("go").onclick = async () => {
+    show("wait");
+    bar(0.03);
+    const fd = new FormData();
+    fd.append("photo", photo, "photo.jpg"); fd.append("style", style);
+    try {
+      const r = await fetch("api.php?a=submit", { method: "POST", body: fd, signal: within(90000) });
+      const j = await r.json();
+      if (!r.ok) return fail(j.error);
+      history.replaceState(null, "", "?id=" + j.id);   // a reload or a sleeping phone can resume
+      poll(j.id);
+    } catch { fail("error"); }
+  };
+
+  $("share").onclick = async () => {
+    const blob = await (await fetch($("out").src)).blob();
+    const file = new File([blob], "exgenius-portret.jpg", { type: "image/jpeg" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) navigator.share({ files: [file], title: "Mój portret AI · ExGenius" }).catch(() => {});
+    else if (navigator.share) navigator.share({ url: location.href }).catch(() => {});
+    else navigator.clipboard.writeText(location.href).then(() => {
+      $("share").textContent = "Skopiowano link ✓";
+      setTimeout(() => ($("share").textContent = "↗️ Udostępnij"), 2000);
+    }, () => {});
+  };
+  $("again").onclick = $("retry").onclick = () => { history.replaceState(null, "", location.pathname); show("form"); };
+
+  const id = new URLSearchParams(location.search).get("id");
+  if (id && /^[a-f0-9]{16}$/.test(id)) poll(id);
+})();
+</script>
+</body>
+</html>

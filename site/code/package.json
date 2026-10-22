@@ -1,0 +1,10 @@
+{
+  "name": "targi-pracy-ai-booth",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI photo booth: static page + PHP job API + a worker that renders portraits with Codex image generation.",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "build": "node build.js"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "astronaut": {
+    "label": "Astronauta retro",
+    "emoji": "🚀",
+    "prompt": "a 1980s retro sci-fi astronaut poster hero in a white space suit, neon synthwave purple and pink light, planets and stars in the background"
+  },
+  "superhero": {
+    "label": "Superbohater",
+    "emoji": "🦸",
+    "prompt": "a bold comic-book superhero flying over a city skyline, halftone dots, dynamic ink lines, saturated primary colours"
+  },
+  "energy": {
+    "label": "Inżynier przyszłości",
+    "emoji": "⚡",
+    "prompt": "a confident engineer of the future in a sleek red and white hi-tech work suit and hard hat, in front of a glowing hydrogen and wind power plant at dusk, cinematic light"
+  },
+  "racer": {
+    "label": "Kierowca F1",
+    "emoji": "🏎️",
+    "prompt": "a Formula racing driver in a red and white race suit holding a helmet in the pit lane, motorsport photography, shallow depth of field"
+  },
+  "oil": {
+    "label": "Portret mistrza",
+    "emoji": "🖼️",
+    "prompt": "a classical oil painting portrait in the style of a 17th-century Dutch master, dramatic chiaroscuro, dark background, period clothing, visible brush strokes"
+  },
+  "pixar": {
+    "label": "Bohater animacji 3D",
+    "emoji": "✨",
+    "prompt": "a 3D animated movie character with soft studio lighting, expressive stylised features and a colourful background"
+  }
+}
